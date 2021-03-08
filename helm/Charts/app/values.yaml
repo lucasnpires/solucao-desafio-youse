@@ -1,0 +1,62 @@
+# Number of replicas to Odin
+replicas: 3
+# Name of image pull
+imagePullSecret: myacr
+image: myacr.azurecr.io/devops/microservice
+version: 1.0.0
+  
+labels: {}
+annotations: {}  
+resources: {}
+
+# Define a different affinity used on Odin
+affinity: {}
+nodeSelector: {}
+
+namespace:
+  create: false
+
+readinessProbe: 
+  httpGet:
+    path: /actuator/health
+    port: 8080
+    scheme: HTTP
+  initialDelaySeconds: 20
+
+startupProbe: 
+  httpGet:
+    path: /actuator/health
+    port: 8080
+    scheme: HTTP
+  initialDelaySeconds: 20
+  failureThreshold: 2
+  periodSeconds: 2      
+
+livenessProbe: 
+  httpGet:
+    path: /actuator/health
+    port: 8080
+    scheme: HTTP
+  initialDelaySeconds: 20
+
+service:
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+  type: LoadBalancer
+  loadBalancerIP:
+  port: 8080    
+  
+  labels: {}   
+
+autoScale:
+  enabled: false 
+  minReplicas: 6
+  maxReplicas: 30
+
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
