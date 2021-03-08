@@ -1,4 +1,4 @@
-# Number of replicas to Odin
+# Number of replicas to App
 replicas: 3
 # Name of image pull
 imagePullSecret: myacr
@@ -9,7 +9,7 @@ labels: {}
 annotations: {}  
 resources: {}
 
-# Define a different affinity used on Odin
+# Define a different affinity used on App
 affinity: {}
 nodeSelector: {}
 
